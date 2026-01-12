@@ -1,0 +1,3 @@
+[submodule "libfontlist"]
+	path = libfontlist
+	url = https://github.com/Tatakinov/libfontlist
