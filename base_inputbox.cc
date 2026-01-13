@@ -177,9 +177,8 @@ void BaseInputBox::key(const SDL_KeyboardEvent &event) {
             cancel();
             break;
         case SDLK_BACKSPACE:
-            if (text_.size() > 0) {
-                text_.pop_back();
-                cursor_index_ = std::min(cursor_index_, static_cast<int>(text_.size()));
+            if (text_.size() > 0 && cursor_index_ > 0) {
+                text_.erase(std::next(text_.begin(), --cursor_index_));
                 change();
             }
             break;
