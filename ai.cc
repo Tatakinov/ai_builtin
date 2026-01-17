@@ -154,11 +154,13 @@ bool Ai::init() {
         }
     }
 
-    std::string exe_path;
-    exe_path.resize(1024);
 #ifdef IS_WINDOWS
+    std::wstring exe_path;
+    exe_path.resize(1024);
     GetModuleFileName(nullptr, exe_path.data(), 1024);
 #else
+    std::string exe_path;
+    exe_path.resize(1024);
     readlink("/proc/self/exe", exe_path.data(), 1024);
 #endif // OS
     std::filesystem::path exe_dir = exe_path;
