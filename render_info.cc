@@ -237,7 +237,7 @@ std::unique_ptr<WrapSurface> RenderInfo::getSurface() {
             }
             c.a = 0xff;
         }
-        SDL_Surface *text = TTF_RenderText_Blended(font->font(), data.content.data.data(), data.content.data.length(), {c.r, c.g, c.b, c.a});
+        SDL_Surface *text = TTF_RenderText_Blended(font->font(), data.content.data.data(), data.content.data.length(), {static_cast<Uint8>(c.r), static_cast<Uint8>(c.g), static_cast<Uint8>(c.b), static_cast<Uint8>(c.a)});
         SDL_Rect r = {data.position.x, data.position.y - scroll_, text->w, text->h};
         SDL_BlitSurface(text, nullptr, dst->surface(), &r);
         SDL_DestroySurface(text);

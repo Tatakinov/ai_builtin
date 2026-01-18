@@ -23,7 +23,7 @@ BaseInputBox::BaseInputBox(Ai *parent, std::unique_ptr<FontCache> &font_cache) :
     util::to_x(s, g);
     s = parent_->getInfo(-1, "communicatebox.font.color.b", "0");
     util::to_x(s, b);
-    color_ = {r, g, b, a};
+    color_ = {static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b), static_cast<Uint8>(a)};
 }
 
 BaseInputBox::~BaseInputBox() {
