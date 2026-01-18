@@ -46,13 +46,7 @@ class Ai {
         bool redrawn_;
 
     public:
-        Ai() : alive_(true), scale_(100), loaded_(false), redrawn_(false) {
-            init();
-#if defined(DEBUG)
-            ayu_dir_ = "./shell/master";
-            surfaces_ = std::make_unique<Surfaces>(ayu_dir_);
-#endif // DEBUG
-        }
+        Ai();
         ~Ai();
 
         bool init();

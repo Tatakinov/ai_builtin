@@ -54,7 +54,7 @@ Ai::~Ai() {
 #endif // Windows
 }
 
-bool Ai::init() {
+Ai::Ai() : alive_(true), scale_(100), loaded_(false), redrawn_(false) {
 #ifdef IS_WINDOWS
     WSADATA wsa;
     WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -137,6 +137,8 @@ bool Ai::init() {
         std::unique_lock<std::mutex> lock(mutex_);
         cond_.wait(lock, [&] { return loaded_; });
     }
+#else
+    ai_dir_ = "./balloon";
 #endif // DEBUG
 
     {
@@ -167,6 +169,10 @@ bool Ai::init() {
     exe_dir = exe_dir.parent_path();
     image_cache_ = std::make_unique<ImageCache>(ai_dir_, exe_dir, false);
     font_cache_ = std::make_unique<FontCache>();
+#if defined(DEBUG)
+    auto family = fontlist::get_default_font();
+    font_cache_->setDefaultFont(family);
+#endif // DEBUG
 
     th_send_ = std::make_unique<std::thread>([&]() {
         while (true) {
@@ -188,8 +194,6 @@ bool Ai::init() {
             }
         }
     });
-
-    return true;
 }
 
 std::string Ai::getInfo(int id, std::string key, std::string default_) {

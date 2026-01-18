@@ -28,11 +28,17 @@ int main(int argc, char **argv) {
 
 #if defined(DEBUG)
     ai.create(0);
+    ai.setBalloonID(0, 0);
     ai.show(0);
-    ai.setSurface(0, 0);
+    int count = 0;
 #endif // DEBUG
 
     while (ai) {
+#if defined(DEBUG)
+        if (count++ % 100 == 0) {
+            ai.appendText(0, "あ");
+        }
+#endif // DEBUG
         ai.run();
     }
 
