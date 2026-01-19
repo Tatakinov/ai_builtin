@@ -164,11 +164,7 @@ void Window::draw(Offset offset, const RenderInfo &info, std::unique_ptr<WrapSur
             else
 #endif // Linux/Unix
             {
-                auto s = std::make_unique<WrapSurface>(surface->width(), surface->height());
-                SDL_ClearSurface(s->surface(), 0, 0, 0, 0);
-                SDL_Rect r = { offset.x - m.x, offset.y - m.y, surface->width(), surface->height() };
-                SDL_BlitSurface(surface->surface(), nullptr, s->surface(), &r);
-                SDL_SetWindowShape(window_, s->surface());
+                SDL_SetWindowShape(window_, surface->surface());
             }
             shape_ = shape;
         }
