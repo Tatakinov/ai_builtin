@@ -110,6 +110,12 @@ void Character::setBalloonDirection(int direction) {
     info_.setDirection(direction == 1);
 }
 
+void Character::raiseOnTalk() {
+    for (auto &[_, v] : windows_) {
+        v->raiseOnTalk();
+    }
+}
+
 void Character::resetDrag() {
     drag_ = std::nullopt;
     position_changed_ = true;

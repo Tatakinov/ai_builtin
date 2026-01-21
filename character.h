@@ -33,6 +33,7 @@ class Character {
         bool upconverted_;
         std::unique_ptr<WrapSurface> current_surface_;
         RenderInfo info_;
+        bool raise_on_talk_;
 
     public:
         Character(Ai *parent, std::unique_ptr<ImageCache> &image_cache, std::unique_ptr<FontCache> &font_cache, int side, const std::string &name);
@@ -63,6 +64,7 @@ class Character {
         void setSize(int w, int h);
         void setBalloonPosition(int x, int y);
         void setBalloonDirection(int direction);
+        void raiseOnTalk();
         std::optional<DragPosition> drag() {
             return drag_;
         }

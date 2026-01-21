@@ -548,6 +548,11 @@ void Ai::run() {
             script_inputbox_ = std::make_unique<ScriptInputBox>(this, font_cache_);
             script_inputbox_->init(image_cache_);
         }
+        else if (args[0] == "ScriptBegin") {
+            raiseOnTalk();
+        }
+        else if (args[0] == "ScriptEnd") {
+        }
     }
     if (script_inputbox_) {
         script_inputbox_->draw();
@@ -594,6 +599,12 @@ void Ai::setBalloonDirection(int side, int direction) {
         return;
     }
     characters_.at(side)->setBalloonDirection(direction);
+}
+
+void Ai::raiseOnTalk() {
+    for (auto &[_, v] : characters_) {
+        v->raiseOnTalk();
+    }
 }
 
 std::string Ai::sendDirectSSTP(std::string method, std::string command, std::vector<std::string> args, std::string script) {

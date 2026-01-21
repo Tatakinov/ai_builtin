@@ -16,7 +16,7 @@
 
 Window::Window(Character *parent, SDL_DisplayID id)
     : window_(nullptr), parent_(parent), offset_({0, 0}),
-    renderer_(nullptr), redrawn_(false) {
+    renderer_(nullptr), redrawn_(false), raise_on_talk_(false) {
     if (util::isWayland()) {
         SDL_Rect r;
         SDL_GetDisplayBounds(id, &r);
@@ -86,6 +86,10 @@ void Window::draw(Offset offset, const RenderInfo &info, std::unique_ptr<WrapSur
     if (offset_ == offset && !info.changed()) {
         redrawn_ = false;
         return;
+    }
+    if (raise_on_talk_) {
+        raise_on_talk_ = false;
+        SDL_RaiseWindow(window_);
     }
     auto m = getMonitorRect();
     SDL_SetRenderTarget(renderer_, nullptr);
@@ -198,6 +202,10 @@ bool Window::swapBuffers() {
         SDL_RenderPresent(renderer_);
     }
     return redrawn_;
+}
+
+void Window::raiseOnTalk() {
+    raise_on_talk_ = true;
 }
 
 double Window::distance(int x, int y) const {

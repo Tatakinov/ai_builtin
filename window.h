@@ -49,6 +49,7 @@ class Window {
         std::unique_ptr<WrapTexture> current_texture_;
         std::unique_ptr<WrapTexture> link_texture_;
         bool redrawn_;
+        bool raise_on_talk_;
         Link prev_link_;
 #if defined(IS__NIX)
         wl_registry *reg_;
@@ -85,6 +86,8 @@ class Window {
         void hide() {
             SDL_HideWindow(window_);
         }
+
+        void raiseOnTalk();
 
         Rect getMonitorRect() const;
 

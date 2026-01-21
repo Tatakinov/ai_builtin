@@ -82,6 +82,8 @@ class Ai {
         void setCursorPosition(int side, std::string axis, double value, bool is_absolute, MoveUnit unit);
         void newLine(int side);
 
+        void raiseOnTalk();
+
         void clearCache();
 
         operator bool() {
