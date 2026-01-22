@@ -74,6 +74,7 @@ class Ai {
         void clearText(int side, bool initialize);
 
         void setBalloonID(int side, int id);
+        void resetBalloonID(int side);
 
         void appendText(int side, const std::string &text);
         void appendLinkBegin(int side, bool is_anchor, const std::string &event, const std::vector<std::string> &args);

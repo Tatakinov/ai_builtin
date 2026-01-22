@@ -272,6 +272,20 @@ void Ai::setBalloonID(int side, int id) {
     characters_.at(side)->setBalloonID(id);
 }
 
+void Ai::resetBalloonID(int side) {
+    if (side == -1) {
+        for (auto &[_, v] : characters_) {
+            v->setBalloonID(0);
+        }
+    }
+    else {
+        if (!characters_.contains(side)) {
+            return;
+        }
+        characters_.at(side)->setBalloonID(0);
+    }
+}
+
 void Ai::appendText(int side, const std::string &text) {
     if (!characters_.contains(side)) {
         return;
@@ -422,6 +436,13 @@ void Ai::run() {
             util::to_x(args[1], side);
             util::to_x(args[2], id);
             setBalloonID(side, id);
+        }
+        else if (args[0] == "ResetBalloonID") {
+            int side = -1;
+            if (args.size() == 2) {
+                util::to_x(args[1], side);
+            }
+            resetBalloonID(side);
         }
         else if (args[0] == "ConfigurationChanged") {
             for (int i = 1; i < args.size(); i++) {
