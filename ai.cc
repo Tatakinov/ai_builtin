@@ -38,6 +38,7 @@ namespace {
     inline int closesocket(int fd) {
         return close(fd);
     }
+    const auto SD_SEND = SHUT_WR;
 #endif
 }
 
@@ -671,7 +672,7 @@ std::string Ai::sendDirectSSTP(std::string method, std::string command, std::vec
         closesocket(soc);
         return res;
     }
-    shutdown(soc, SHUT_WR);
+    shutdown(soc, SD_SEND);
     char buffer[BUFFER_SIZE] = {};
     std::string data;
     while (true) {
