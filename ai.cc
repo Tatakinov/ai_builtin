@@ -485,14 +485,14 @@ void Ai::run() {
                 }
             }
         }
-        else if (args[0] == "Position" && args.size() == 4) {
+        else if (args[0] == "SetPosition" && args.size() == 4) {
             int side, x, y;
             util::to_x(args[1], side);
             util::to_x(args[2], x);
             util::to_x(args[3], y);
             setBalloonPosition(side, x, y);
         }
-        else if (args[0] == "Direction" && args.size() == 3) {
+        else if (args[0] == "SetDirection" && args.size() == 3) {
             int side, direction;
             util::to_x(args[1], side);
             util::to_x(args[2], direction);
@@ -570,10 +570,10 @@ void Ai::run() {
             script_inputbox_ = std::make_unique<ScriptInputBox>(this, font_cache_);
             script_inputbox_->init(image_cache_);
         }
-        else if (args[0] == "ScriptBegin") {
+        else if (args[0] == "OnScriptBegin") {
             raiseOnTalk();
         }
-        else if (args[0] == "ScriptEnd") {
+        else if (args[0] == "OnScriptEnd") {
         }
     }
     if (script_inputbox_) {
