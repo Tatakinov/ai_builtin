@@ -48,6 +48,7 @@ class Character {
         int side() const {
             return side_;
         }
+        void setScale(int scale);
         void show();
         void hide();
         void clearText(bool initialize);

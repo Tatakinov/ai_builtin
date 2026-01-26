@@ -41,7 +41,6 @@ class Ai {
         std::string path_;
         std::string uuid_;
         bool alive_;
-        int scale_;
         bool loaded_;
         bool redrawn_;
 
@@ -65,6 +64,8 @@ class Ai {
         void resetBalloonPosition();
 
         std::optional<Offset> getCharacterOffset(int side);
+
+        void setScale(int scale);
 
         void show(int side);
 

@@ -55,7 +55,7 @@ Ai::~Ai() {
 #endif // Windows
 }
 
-Ai::Ai() : alive_(true), scale_(100), loaded_(false), redrawn_(false) {
+Ai::Ai() : alive_(true), loaded_(false), redrawn_(false) {
 #ifdef IS_WINDOWS
     WSADATA wsa;
     WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -231,6 +231,12 @@ void Ai::create(int side) {
         characters_.at(side)->create(0);
     }
     return;
+}
+
+void Ai::setScale(int scale) {
+    for (auto &[_k, v] : characters_) {
+        v->setScale(scale);
+    }
 }
 
 void Ai::show(int side) {
@@ -457,13 +463,13 @@ void Ai::run() {
                 if (key == "scale") {
                     int scale;
                     util::to_x(value, scale);
-                    if (scale == scale_ || scale < 10) {
+                    if (scale < 10) {
                         continue;
                     }
-                    scale_ = scale;
                     clearCache();
                     image_cache_->setScale(scale);
                     changed = true;
+                    setScale(scale);
                 }
                 if (key == "font") {
                     auto &font = font_cache_->getDefaultFont();

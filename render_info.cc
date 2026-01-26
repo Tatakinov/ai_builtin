@@ -10,7 +10,7 @@ namespace {
     constexpr int kLineSpace = 1;
 }
 
-RenderInfo::RenderInfo(Character *parent, int side, std::unique_ptr<FontCache> &font_cache, std::unique_ptr<ImageCache> &image_cache) : parent_(parent), side_(side), balloon_id_(-1), direction_(false), scroll_(0), shown_(false), font_cache_(font_cache), image_cache_(image_cache), origin_x_(0), origin_y_(0), changed_(false) {
+RenderInfo::RenderInfo(Character *parent, int side, std::unique_ptr<FontCache> &font_cache, std::unique_ptr<ImageCache> &image_cache) : parent_(parent), side_(side), balloon_id_(-1), direction_(false), scroll_(0), shown_(false), scale_(100), font_cache_(font_cache), image_cache_(image_cache), origin_x_(0), origin_y_(0), changed_(false) {
     clear(true);
 }
 
@@ -106,6 +106,14 @@ void RenderInfo::clear(bool initialize) {
     };
 }
 
+void RenderInfo::setScale(int scale) {
+    if (scale == scale_) {
+        return;
+    }
+    scale_ = scale;
+    change();
+}
+
 void RenderInfo::setOrigin(int x, int y) {
     if (origin_x_ == x && origin_y_ == y) {
         return;
@@ -190,8 +198,6 @@ void RenderInfo::newBuffer(bool new_line) {
             }
         });
     }
-    auto &last = post_.data.back();
-    auto &font = font_cache_->get(last.content.attr.font) ? font_cache_->get(last.content.attr.font) : font_cache_->get("default");
 }
 
 std::unique_ptr<WrapSurface> RenderInfo::getSurface() {
@@ -216,7 +222,9 @@ std::unique_ptr<WrapSurface> RenderInfo::getSurface() {
         if (data.content.data.length() == 0) {
             continue;
         }
-        auto &font = font_cache_->get(data.content.attr.font) ? font_cache_->get(data.content.attr.font) : font_cache_->get("default");
+        auto &font = (font_cache_->get(data.content.attr.font)->font() != nullptr) ? font_cache_->get(data.content.attr.font) : font_cache_->get("default");
+        auto old_size = TTF_GetFontSize(font->font());
+        TTF_SetFontSize(font->font(), old_size * scale_ / 100.0);
         auto &color = data.content.attr.color;
         post::ColorInt c = {0, 0, 0, 0};
         if (std::holds_alternative<post::ColorInt>(color)) {
@@ -238,9 +246,10 @@ std::unique_ptr<WrapSurface> RenderInfo::getSurface() {
             c.a = 0xff;
         }
         SDL_Surface *text = TTF_RenderText_Blended(font->font(), data.content.data.data(), data.content.data.length(), {static_cast<Uint8>(c.r), static_cast<Uint8>(c.g), static_cast<Uint8>(c.b), static_cast<Uint8>(c.a)});
-        SDL_Rect r = {data.position.x, data.position.y - scroll_, text->w, text->h};
+        SDL_Rect r = {data.position.x * scale_ / 100, (data.position.y - scroll_) * scale_ / 100, text->w * scale_ / 100, text->h * scale_ / 100};
         SDL_BlitSurface(text, nullptr, dst->surface(), &r);
         SDL_DestroySurface(text);
+        TTF_SetFontSize(font->font(), old_size);
     }
     return dst;
 }

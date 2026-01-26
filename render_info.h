@@ -143,6 +143,7 @@ class RenderInfo {
         bool direction_;
         int scroll_;
         bool shown_;
+        int scale_;
         post::Post post_;
 
         std::unique_ptr<FontCache> &font_cache_;
@@ -188,6 +189,7 @@ class RenderInfo {
             return changed_;
         }
         void clear(bool initialize);
+        void setScale(int scale);
         void setOrigin(int x, int y);
         void setValidRect(int x, int y, int w, int h);
         void setWrapPoint(int x);

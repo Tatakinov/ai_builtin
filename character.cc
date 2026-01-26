@@ -50,6 +50,10 @@ bool Character::swapBuffers() {
     return redrawn;
 }
 
+void Character::setScale(int scale) {
+    info_.setScale(scale);
+}
+
 void Character::show() {
     for (auto &[_, v] : windows_) {
         v->show();
