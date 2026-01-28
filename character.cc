@@ -173,6 +173,12 @@ void Character::scroll(int diff) {
     info_.scroll(diff);
 }
 
+void Character::maximized(const SDL_WindowEvent &event) {
+    for (auto &[_, v] : windows_) {
+        v->maximized(event);
+    }
+}
+
 void Character::hit(int x, int y) {
     if (util::isWayland()) {
         x -= rect_.x;

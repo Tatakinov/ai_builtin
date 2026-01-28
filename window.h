@@ -49,6 +49,7 @@ class Window {
         std::unique_ptr<WrapTexture> current_texture_;
         std::unique_ptr<WrapTexture> link_texture_;
         bool redrawn_;
+        bool changed_;
         bool raise_on_talk_;
         Link prev_link_;
 #if defined(IS__NIX)
@@ -98,6 +99,7 @@ class Window {
         void motion(const SDL_MouseMotionEvent &event);
         void button(const SDL_MouseButtonEvent &event);
         void wheel(const SDL_MouseWheelEvent &event);
+        void maximized(const SDL_WindowEvent &event);
 };
 
 #endif // WINDOW_H_

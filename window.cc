@@ -16,8 +16,9 @@
 
 Window::Window(Character *parent, SDL_DisplayID id)
     : window_(nullptr), parent_(parent), offset_({0, 0}),
-    renderer_(nullptr), redrawn_(false), raise_on_talk_(false) {
-    if (util::isWayland()) {
+    renderer_(nullptr), redrawn_(false), changed_(false),
+    raise_on_talk_(false) {
+    if (util::isWayland() && id > 0) {
         SDL_Rect r;
         SDL_GetDisplayBounds(id, &r);
         monitor_rect_ = { r.x, r.y, r.w, r.h };
@@ -26,16 +27,7 @@ Window::Window(Character *parent, SDL_DisplayID id)
         monitor_rect_ = { 0, 0, 1, 1 };
     }
     if (util::isWayland()) {
-        SDL_PropertiesID p = SDL_CreateProperties();
-        assert(p);
-        SDL_SetStringProperty(p, SDL_PROP_WINDOW_CREATE_TITLE_STRING, parent_->name().c_str());
-        SDL_SetBooleanProperty(p, SDL_PROP_WINDOW_CREATE_TRANSPARENT_BOOLEAN, true);
-        SDL_SetBooleanProperty(p, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
-        SDL_SetNumberProperty(p, SDL_PROP_WINDOW_CREATE_X_NUMBER, SDL_WINDOWPOS_UNDEFINED_DISPLAY(id));
-        SDL_SetNumberProperty(p, SDL_PROP_WINDOW_CREATE_Y_NUMBER, SDL_WINDOWPOS_UNDEFINED_DISPLAY(id));
-        SDL_SetNumberProperty(p, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, monitor_rect_.width);
-        SDL_SetNumberProperty(p, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, monitor_rect_.height);
-        window_ = SDL_CreateWindowWithProperties(p);
+        window_ = SDL_CreateWindow(parent_->name().c_str(), 200, 200, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE);
     }
     else {
         window_ = SDL_CreateWindow(parent_->name().c_str(), 200, 200, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS);
@@ -83,10 +75,11 @@ void Window::position(int x, int y) {
 }
 
 void Window::draw(Offset offset, const RenderInfo &info, std::unique_ptr<WrapSurface> &surface) {
-    if (offset_ == offset && !info.changed()) {
+    if (offset_ == offset && !info.changed() && !changed_) {
         redrawn_ = false;
         return;
     }
+    changed_ = false;
     if (raise_on_talk_) {
         raise_on_talk_ = false;
         SDL_RaiseWindow(window_);
@@ -365,6 +358,18 @@ void Window::wheel(const SDL_MouseWheelEvent &event) {
     parent_->scroll(event.y);
 }
 
+void Window::maximized(const SDL_WindowEvent &event) {
+    if (event.windowID != SDL_GetWindowID(window_)) {
+        return;
+    }
+    if (util::isWayland()) {
+        int w, h;
+        SDL_GetWindowSize(window_, &w, &h);
+        monitor_rect_.width = w;
+        monitor_rect_.height = h;
+        changed_ = true;
+    }
+}
 
 Rect Window::getMonitorRect() const {
     if (util::isWayland()) {

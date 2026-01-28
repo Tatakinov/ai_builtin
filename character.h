@@ -93,6 +93,7 @@ class Character {
         void button(const SDL_MouseButtonEvent &event);
         void wheel(const SDL_MouseWheelEvent &event);
         void scroll(int diff);
+        void maximized(const SDL_WindowEvent &event);
         void hit(int x, int y);
         std::string getInfo(int id, std::string key, std::string default_);
         void appendText(const std::string &text);
