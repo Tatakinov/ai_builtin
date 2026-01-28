@@ -341,6 +341,8 @@ void RenderInfo::hit(int x, int y) {
     LinkContent content;
     bool hit = false;
     bool in_link = false;
+    x = x * 100.0 / scale_;
+    y = y * 100.0 / scale_;
     for (auto &data : post_.data) {
         if (data.head.link_begin) {
             auto begin = data.head.link_begin.value();
@@ -351,7 +353,13 @@ void RenderInfo::hit(int x, int y) {
         }
         if (in_link) {
             auto &p = data.position;
-            list.push_back(p);
+            post::Rect r = {
+                p.x * scale_ / 100.0,
+                p.y * scale_ / 100.0,
+                p.w * scale_ / 100.0,
+                p.h * scale_ / 100.0,
+            };
+            list.push_back(r);
             if (data.content.type == post::ContentType::Text) {
                 content.text += data.content.data;
             }
@@ -381,7 +389,7 @@ void RenderInfo::hit(int x, int y) {
 std::vector<post::Rect> RenderInfo::getHitRegion() const {
     auto ret = link_.hit_region_list;
     for (auto &r : ret) {
-        r.y -= scroll_;
+        r.y -= scroll_ * scale_ / 100.0;
     }
     return ret;
 }
