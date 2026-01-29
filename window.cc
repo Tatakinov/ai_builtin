@@ -27,7 +27,23 @@ Window::Window(Character *parent, SDL_DisplayID id)
         monitor_rect_ = { 0, 0, 1, 1 };
     }
     if (util::isWayland()) {
-        window_ = SDL_CreateWindow(parent_->name().c_str(), 200, 200, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE);
+        int width = -1, height = -1;
+        int count = 0;
+        auto *displays = SDL_GetDisplays(&count);
+        for (int i = 0; i < count; i++) {
+            SDL_Rect r;
+            SDL_GetDisplayBounds(displays[i], &r);
+            if (width == -1 || width > r.w) {
+                width = r.w;
+            }
+            if (height == -1 || height > r.h) {
+                height = r.h;
+            }
+        }
+        monitor_rect_.width = width;
+        monitor_rect_.height = height;
+        SDL_free(displays);
+        window_ = SDL_CreateWindow(parent_->name().c_str(), width, height, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_RESIZABLE);
     }
     else {
         window_ = SDL_CreateWindow(parent_->name().c_str(), 200, 200, SDL_WINDOW_TRANSPARENT | SDL_WINDOW_BORDERLESS | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS);
