@@ -1,6 +1,7 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include <cmath>
 #include <filesystem>
 #include <sstream>
 #include <string>
@@ -23,9 +24,6 @@ namespace util {
         oss << value;
         return oss.str();
     }
-
-    double random();
-    int random(int a, int b);
 
     std::string side2str(int side);
 
