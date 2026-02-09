@@ -1,4 +1,5 @@
 #include "image_cache.h"
+#include "misc.h"
 
 #include <cassert>
 #include <cmath>
@@ -14,7 +15,11 @@ ImageCache::ImageCache(const std::filesystem::path &balloon_dir, const std::file
     std::filesystem::path model_path = exe_dir / "model.onnx";
     try {
         Ort::SessionOptions session_options;
+#if defined(IS_WINDOWS)
+        session_ = {env_, model_path.wstring().c_str(), session_options};
+#else
         session_ = {env_, model_path.string().c_str(), session_options};
+#endif // Windows
         th_ = std::make_unique<std::thread>([&]() {
             while (true) {
                 std::filesystem::path p;
