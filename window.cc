@@ -359,6 +359,12 @@ void Window::button(const SDL_MouseButtonEvent &event) {
                 }
             }
         }
+        else {
+            // FIXME button enum / click count
+            std::vector<std::string> args = {util::to_s(event.button), "1", util::to_s(parent_->side())};
+            Request req = {"EXECUTE", "NotifyBalloonClick", args};
+            parent_->enqueueDirectSSTP({req});
+        }
     }
     for (auto &[k, v] : mouse_state_) {
         if (!v.press) {
