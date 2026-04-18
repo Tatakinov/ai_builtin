@@ -175,9 +175,11 @@ class RenderInfo {
         }
         void show() {
             shown_ = true;
+            change();
         }
         void hide() {
             shown_ = false;
+            change();
         }
         void update() {
             changed_ = false;

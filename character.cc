@@ -55,12 +55,14 @@ void Character::setScale(int scale) {
 }
 
 void Character::show() {
+    info_.show();
     for (auto &[_, v] : windows_) {
         v->show();
     }
 }
 
 void Character::hide() {
+    info_.hide();
     for (auto &[_, v] : windows_) {
         v->hide();
     }
