@@ -116,6 +116,12 @@ void Character::setBalloonDirection(int direction) {
     info_.setDirection(direction == 1);
 }
 
+void Character::raise() {
+    for (auto &[_, v] : windows_) {
+        v->raise();
+    }
+}
+
 void Character::raiseOnTalk() {
     for (auto &[_, v] : windows_) {
         v->raiseOnTalk();

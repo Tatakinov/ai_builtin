@@ -88,6 +88,7 @@ class Window {
             SDL_HideWindow(window_);
         }
 
+        void raise();
         void raiseOnTalk();
 
         Rect getMonitorRect() const;

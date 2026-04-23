@@ -65,6 +65,7 @@ class Character {
         void setSize(int w, int h);
         void setBalloonPosition(int x, int y);
         void setBalloonDirection(int direction);
+        void raise();
         void raiseOnTalk();
         std::optional<DragPosition> drag() {
             return drag_;

@@ -97,6 +97,8 @@ void Window::draw(Offset offset, const RenderInfo &info, std::unique_ptr<WrapSur
     }
     changed_ = false;
     if (raise_on_talk_) {
+        Request req = {"EXECUTE", "RaiseSurface", {util::to_s(parent_->side())}};
+        parent_->enqueueDirectSSTP({req});
         raise_on_talk_ = false;
         SDL_RaiseWindow(window_);
     }
@@ -211,6 +213,10 @@ bool Window::swapBuffers() {
         SDL_RenderPresent(renderer_);
     }
     return redrawn_;
+}
+
+void Window::raise() {
+    SDL_RaiseWindow(window_);
 }
 
 void Window::raiseOnTalk() {
@@ -328,6 +334,13 @@ void Window::motion(const SDL_MouseMotionEvent &event) {
 void Window::button(const SDL_MouseButtonEvent &event) {
     if (event.windowID != SDL_GetWindowID(window_)) {
         return;
+    }
+    if (mouse_state_[event.button].press == event.down) {
+        return;
+    }
+    if (event.down) {
+        Request req = {"EXECUTE", "RaiseSurface", {util::to_s(parent_->side())}};
+        parent_->enqueueDirectSSTP({req});
     }
     mouse_state_[event.button].press = event.down;
     if (event.button == MOUSE_BUTTON_LEFT && !mouse_state_[event.button].press) {

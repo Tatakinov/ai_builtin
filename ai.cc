@@ -242,6 +242,13 @@ void Ai::show(int side) {
     characters_.at(side)->show();
 }
 
+void Ai::raise(int side) {
+    if (!characters_.contains(side)) {
+        return;
+    }
+    characters_.at(side)->raise();
+}
+
 void Ai::hideAll() {
     for (auto &[k, _v] : characters_) {
         hide(k);
@@ -577,10 +584,19 @@ void Ai::run() {
             script_inputbox_ = std::make_unique<ScriptInputBox>(this, font_cache_);
             script_inputbox_->init(image_cache_);
         }
+        else if (args[0] == "OnScopeChange") {
+            int side;
+            util::to_x(args[1], side);
+            raiseOnTalk(side);
+        }
         else if (args[0] == "OnScriptBegin") {
-            raiseOnTalk();
         }
         else if (args[0] == "OnScriptEnd") {
+        }
+        else if (args[0] == "Raise") {
+            int side;
+            util::to_x(args[1], side);
+            raise(side);
         }
     }
     if (script_inputbox_) {
@@ -630,10 +646,11 @@ void Ai::setBalloonDirection(int side, int direction) {
     characters_.at(side)->setBalloonDirection(direction);
 }
 
-void Ai::raiseOnTalk() {
-    for (auto &[_, v] : characters_) {
-        v->raiseOnTalk();
+void Ai::raiseOnTalk(int side) {
+    if (!characters_.contains(side)) {
+        return;
     }
+    characters_.at(side)->raiseOnTalk();
 }
 
 std::string Ai::sendDirectSSTP(std::string method, std::string command, std::vector<std::string> args, std::string script) {

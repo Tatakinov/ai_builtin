@@ -68,6 +68,7 @@ class Ai {
         void setScale(int scale);
 
         void show(int side);
+        void raise(int side);
 
         void hideAll();
         void hide(int side);
@@ -84,7 +85,7 @@ class Ai {
         void setCursorPosition(int side, std::string axis, double value, bool is_absolute, MoveUnit unit);
         void newLine(int side);
 
-        void raiseOnTalk();
+        void raiseOnTalk(int side);
 
         void clearCache();
 
