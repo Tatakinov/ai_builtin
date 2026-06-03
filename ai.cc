@@ -341,6 +341,7 @@ void Ai::clearCache() {
 void Ai::run() {
     SDL_Event event;
     while ((redrawn_) ? (SDL_PollEvent(&event)) : (SDL_WaitEventTimeout(&event, 10))) {
+        redrawn_ = true;
         switch (event.type) {
             case SDL_EVENT_QUIT:
                 alive_ = false;
